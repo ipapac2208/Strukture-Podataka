@@ -1,13 +1,8 @@
-/*2. Definirati strukturu osoba(ime, prezime, godina roðenja) i napisati program koji :
-A.dinamièki dodaje novi element na poèetak liste,
-B.ispisuje listu,
-C.dinamièki dodaje novi element na kraj liste,
-D.pronalazi element u listi(po prezimenu),
-E.briše odreðeni element iz liste,
-U zadatku se ne smiju koristiti globalne varijable.*/
-
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
+#define STRUCT_ERROR -1
+#define NOT_FOUND 404
 
 typedef struct person* Pos;
 
@@ -15,104 +10,115 @@ typedef struct person {
 	char name[20];
 	char surname[20];
 	int birthYear;
-	Person* head;
-	Person* el;
 	Pos Next;
-	Pos Prev;
 }Person;	//struktura osoba
 
-Person* insertOnBegin();
-Person* insertOnEnd();
-int printPerson(Person*);
-bool findPerson(Person*);
-int deletePerson(Person*);
-Pos findPrev(char, Pos);
+int insertOnBegin(char[], char[], int, Pos);
+int insertOnEnd(char[], char[], int, Pos);
+int printPerson(Pos);
+Pos findPerson(char[], Pos);
+int deletePerson(char[], Pos);
 
-int main() {}
+int main() {
 
-Person* insertOnBegin() {		//unos na pocetak
+	Person head = { "", "", 0, NULL };
 
-	Person* o;
-	Pos q;
-	o = (Pos)malloc(sizeof(Person));
-	o = o->head;
+	insertOnBegin("Nikola", "Roguljic", 2004, &head);
+	printPerson(head.Next);
+	printf("\n");
+	insertOnBegin("Petar", "Males", 2004, &head);
+	printPerson(head.Next);
+	printf("\n");
+	insertOnEnd("Jakov", "Markic", 2005, &head);
+	printPerson(head.Next);
+	Pos temp = findPerson("Roguljic", head.Next);
+	printf("Attempting to find inserted person\n");
+	if (temp == NULL)
+		printf("PERSON NOT FOUND\n");
+	else
+		printf("Person exists\n");
+	printf("Attempting to delete inserted person\n");
+	if (deletePerson("Milardovic", &head) == NOT_FOUND) printf("COULDN'T DELETE PERSON (DOESN'T EXIST)\n");
+	else
+		printf("Person deleted successfully\n");
+	printf("\n");
+	printPerson(head.Next);
 
-	if (!o)
-	{
-		printf("ERROR: osoba nije pronadena");
-		return -1;
-	}
-	else {
-		q->Next = o->Next;
-		o->Next = q->el;
-	}
-	return o;
+	return 0;
 }
 
-Person* insertOnEnd() {		//unos na kraj
-	Person* o;
-	Pos q;
-	o = o->head;
-	o = (Pos)malloc(sizeof(Person));
+int insertOnBegin(char name[20], char surname[20], int birthYear, Pos p) {		//unos na pocetak
 
-	if (!o)
+	Pos q;
+	q = (Pos)malloc(sizeof(Person));
+
+	if (!q)
 	{
-		printf("ERROR: osoba nije pronadena");
-		return -1;
+		printf("ERROR: STRUCT NOT FOUND");
+		return STRUCT_ERROR;
 	}
 	else {
-		while (o->Next != NULL)
-			o = o->Next;
-		q->Next = o->Next;
-		o->Next = q->el;
-	}
-	return o;
-}
+		strcpy(q->name, name);
+		strcpy(q->surname, surname);
+		q->birthYear = birthYear;
+		q->Next = p->Next;
+		p->Next = q;
 
-int printPerson(Person* o) {		//print ako nije ocito
-	int i = 1;
-	while (o[i].el != NULL)
-	{
-		printf("%s %s %d", o[i].name, o[i].surname, o[i].birthYear);
-		i++;
 	}
 	return 0;
 }
-bool findPerson(Person p) {
 
-	char targetSurname;
-	while (p->el != NULL)
+int insertOnEnd(char name[20], char surname[20], int birthYear, Pos p) {		//unos na kraj
+	Pos q;
+	q = (Pos)malloc(sizeof(Person));
+
+	if (!q)
 	{
-		if (p->el->surname == targetSurname)
-			return 0;
-		p = p->next;
+		printf("ERROR: STRUCT NOT FOUOND");
+		return STRUCT_ERROR;
 	}
-	return 1;
+	else {
+		while (p->Next != NULL)
+			p = p->Next;
+		strcpy(q->name, name);
+		strcpy(q->surname, surname);
+		q->birthYear = birthYear;
+		p->Next = q;
+		q->Next = NULL;
+	}
+	return 0;
 }
 
-int deletePerson(Person* p) {
-
-	char target;
-
-	while (p->el != NULL)
-	{
-		if (p->el == target)
-		{
-			findPrev(target, p);
-			p->Prev->Next = p->Next;
-			delete p;
-		}
+int printPerson(Pos o) {		//print ako nije ocito
+	while (o != NULL) {
+		printf("%s %s %d \n", o->name, o->surname, o->birthYear);
+		o = o->Next;
 	}
-
+	return 0;
 }
 
-Pos findPrev(char target, Pos p) {
-	p = p->head;
+Pos findPerson(char target[20], Pos p) {	//pronalazenje osobe
 
-	while (p->el != target)
+	while (p != NULL)
 	{
-		p->Prev = p->el;
-		p->el = p->Next;
+		if (strcmp(p->surname, target) == 0)
+			return p;
+		p = p->Next;
 	}
-	return p->Prev;
+	return p;
+}
+
+int deletePerson(char target[20], Pos p) {		//brisanje osobe
+	Pos t = findPerson(target, p);
+	if (!t) {
+		printf("ERROR: PERSON DOESN'T EXIST\n");
+		return NOT_FOUND;
+	}
+	while (p->Next != t)
+	{
+		p = p->Next;
+	}
+	p->Next = t->Next;
+	free(t);
+	return 0;
 }
