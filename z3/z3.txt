@@ -1,0 +1,5 @@
+﻿Build started at 9:29 PM...
+1>------ Build started: Project: z3, Configuration: Debug x64 ------
+1>z3.vcxproj -> C:\Users\ipapa\source\repos\z3\x64\Debug\z3.exe
+========== Build: 1 succeeded, 0 failed, 0 up-to-date, 0 skipped ==========
+========== Build completed at 9:29 PM and took 00.238 seconds ==========
