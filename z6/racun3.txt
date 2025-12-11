@@ -1,3 +1,4 @@
-banana 1.50€/kg
-jabuka 1.70€/kg
-naranca 1.65€/kg
+2025 7 30
+banana 4 1.50€
+jabuka 7 1.70
+naranca 10 1.65

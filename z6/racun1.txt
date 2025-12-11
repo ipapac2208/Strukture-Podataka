@@ -1,3 +1,4 @@
-mlijeko 2.99€
-jaja 4.50€
-namaz 1.30€
+2025 7 14
+mlijeko 2 2.99
+jaja 2 4.50
+namaz 5 1.30

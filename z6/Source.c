@@ -1,33 +1,87 @@
-#define CRT_SECURE_NO_WARNINGS
+#define _CRT_SECURE_NO_WARNINGS
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 #include <ctype.h>
+#include <stdbool.h>
 #include "racun.h"
-#include "artikli.h"
 #define FILE_ERROR 404
 #define	STRUCT_ERROR -1
 
-typedef Receipt* PosR;
+typedef struct receipt* PosR;
 
 typedef struct receipt {
 	char filename[20];
-	PosD day;
+	PosD date;
 	PosR next;
 } Receipt;
 
 int openMainFile(PosR, PosD, PosA);
-int openReceiptFile(char[20], PosD, PosA);
-int formReceipt(PosA, FILE);
-int printFile(PosD, PosA);
-int findItem(PosD, char[50]);
+PosD openReceiptFile(char[20], PosD, PosA);
+PosA formReceipt(PosA, FILE*, char[50], int, double);
+int printFile(PosR);
+int findItem(PosR, char[50]);
+int deleteArticle(PosA);
+int deleteDate(PosD);
 
-int findItem(PosD pd, char target[50]) {
+int main() {
+	Article headArt = { " ", 0, 0.0, NULL };
+	Date headDate = { 0,0,0, NULL , NULL };
+	Receipt headRec = { " ", NULL, NULL };
+	char target[50];
+	char cmptarget[50];
+
+	if (openMainFile(&headRec, &headDate, &headArt) == FILE_ERROR) {
+		printf("FILE_ERROR");
+		return FILE_ERROR;
+	}
+	printFile(headRec.next);
+
+	printf("odaberite koji biste artikl zeljeli pronac\n");
+	scanf("%s", target);
+	for (int i = 0; i < 50; i++)
+	{
+		cmptarget[i] = toupper(target[i]);
+	}
+	findItem(headRec.next, cmptarget);
+
+	return 0;
+}
+
+int deleteDate(PosD pd) {
+	PosD curr;
+	curr = pd->next;
+	while (pd->next != NULL)
+	{
+		curr = pd->next;
+		pd->next = curr->next;
+		free(curr);
+	}
+
+	return 0;
+}
+
+int deleteArticle(PosA pa) {
+	PosA curr;
+	curr = pa->next;
+	while (pa->next != NULL)
+	{
+		curr = pa->next;
+		pa->next = curr->next;
+		free(curr);
+	}
+
+	return 0;
+
+}
+
+int findItem(PosR p, char target[50]) {
 	int totalAmm = 0;
 	double moneySpent = 0.0;
 	bool found = false;
-	PosD first;
-	PosD last;
+	PosD pd = p->date;
+	PosD first = NULL;
+	PosD last = NULL;
 	while (pd != NULL)
 	{
 		while (pd->item != NULL)
@@ -46,118 +100,122 @@ int findItem(PosD pd, char target[50]) {
 		pd = pd->next;
 	}
 	if (found) {
-		printf("%d %ld€ %d y %d m %d d", &totalAmm, &moneySpent, last->year - first->year, last->month - first->month, last->day - first->day);
+		printf("%d %lf€ %d y %d m %d d", totalAmm, moneySpent, last->year - first->year, last->month - first->month, last->day - first->day);
 	}
 	else printf("item not found");
 	return 0;
 }
 
-int printFile(PosD pd, PosA pa) {
-	while (pd != NULL)
-	{
-		printf("%d-%d-%d", pd->year, pd->month, pd->day);
+int printFile(PosR p){
+	PosD pd = p->date->next;
+	PosA pa = pd->item->next;
+	while (pd != NULL) {
+		printf("%d-%d-%d\n", pd->year, pd->month, pd->day);
 		while (pa != NULL)
 		{
-			printf("%s %d %s", pa->name, pa->ammount, pa->price);
+			printf("%s %d %lf\n", pa->name, pa->ammount, pa->price);
 			pa = pa->next;
 		}
 		pd = pd->next;
 	}
+	
 	return 0;
 }
 
-int formReceipt(PosA pa, FILE fp) {
+PosA formReceipt(PosA pa, FILE* fp, char name[50], int ammount, double price) {
 	PosA q = (Article*)malloc(sizeof(Article));
-	char name[50];
-	char price[10];
-	int ammount;
 
 	if (!q)
-		return STRUCT_ERROR;
+		return NULL;
 
-	fscanf(fp, "%s %s %d", &name, &price, &ammount);
 	char cmpname[50];
-	cmpname = toupper(name);
-
-	q->name = cmpname;
+	for (int i = 0; i < 50; i++)
+	{
+		cmpname[i] = toupper(name[i]);
+		q->name[i] = cmpname[i];
+	}
+	
 	q->price = price;
 	q->ammount = ammount;
+	PosA curr = pa;
 	if (pa->next != NULL)
 	{
-		PosA curr = pa->next;
-		while (curr != NULL) {
-			if (strcmp(q, curr) != 0)
-			{
-				q->next = curr->next;
-				curr->next = q;
-			}
+		curr = pa->next;
+		while (curr -> next != NULL && strcmp(q->name, curr->name) > 0)
 			curr = curr->next;
-		}
+		q->next = curr->next;
+		curr->next = q;
+
 	}
 	else {
+
 		q->next = pa->next;
 		pa->next = q;
 	}
-	return 0;
+	
+	return pa;
 }
 
-int openReceiptFile(char filename[20], PosD pd, PosA pa) {
+PosD openReceiptFile(char filename[20], PosD pd, PosA pa) {
 
 	FILE* fp = fopen(filename, "r");
 	PosD q = (Date*)malloc(sizeof(Date));
 
 	int year = 0, month = 0, day = 0;
-
+	char name[50] ="\0";
+	double price = 0.0;
+	int ammount = 0;
 	if (!q)
-		return STRUCT_ERROR;
+		return NULL;
 	if (!fp)
-		return FILE_ERROR;
+		return NULL;
 
 	fscanf(fp, "%d %d %d", &year, &month, &day);
 	q->day = day;
 	q->month = month;
 	q->year = year;
+	while (!feof(fp)) {
+		fscanf(fp, "%s %d %lf", name, &ammount, &price);
+		q->item = formReceipt(pa, fp, name, ammount, price);
+	}
 	if (pd->next != NULL) {
 		PosD curr = pd->next;
-		while (curr != NULL) {
-			if (q->year > curr->next->year || q->month > curr->next->month || q->day > curr->next->day)
-			{
-				q->next = curr->next;
-				curr->next = q;
-			}
+		while (curr ->next != NULL && (q->year > curr->year || q->month > curr->month || q->day > curr->day)) 
 			curr = curr->next;
-		}
+
+		q->next = curr->next;
+		curr->next = q;
 	}
 	else
 	{
 		q->next = pd->next;
 		pd->next = q;
 	}
-	while (!feof(fp)) {
-		formReceipt(pa, fp);
-	}
+
 	fclose(fp);
 
-	return 0;
-
+	return pd;
 }
 
 int openMainFile(PosR p, PosD pd, PosA pa) {
 	FILE* fp = fopen("racuni.txt", "r");
 	PosR q = (Receipt*)malloc(sizeof(Receipt));
 
-	if (!q)
-		return STRUCT_ERROR;
 	if (!fp)
 		return FILE_ERROR;
 
 	while (!feof(fp)) {
-		strcpy(q->filename, fp);
-		openReceiptFile(q->filename, pd, pa);
+		q = (Receipt*)malloc(sizeof(Receipt));
+		if (!q)
+			return STRUCT_ERROR;
+		fscanf(fp, "%s", q->filename);
+		q->date = openReceiptFile(q->filename, pd, pa);
+	
 		q->next = p->next;
 		p->next = q;
+		p = p->next;
 	}
 	fclose(fp);
-	printFile(pd->next, pa->next);
+
 	return 0;
 }

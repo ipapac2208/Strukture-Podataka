@@ -1,3 +1,4 @@
-cips 2.00€
-smoki 1.99€
-krekeri 1.20€
+2025 8 4
+cips 1 2.00
+smoki 2 1.99
+krekeri 3 1.20

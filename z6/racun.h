@@ -1,6 +1,7 @@
 #include "artikli.h"
-typedef Date* PosD;
-typedef struct date{
+typedef struct date* PosD;
+
+typedef struct date {
 	int day;
 	int month;
 	int year;

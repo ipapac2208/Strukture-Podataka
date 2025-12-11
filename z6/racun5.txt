@@ -1,3 +1,4 @@
-haribo_bomboni 3.50€
-mlijec_cok_dorina 2.99€
-ina_eurosuper_95_20l 40.24€
+2025 8 14
+haribo_bomboni 1 3.50
+mlijec_cok_dorina 2 2.99
+ina_eurosuper_95 20 40.24

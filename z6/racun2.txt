@@ -1,3 +1,4 @@
-govedina 23.99€/kg
-svinjetina 27.99€/kg
-cevapi 17.99€/kg
+2025 7 21
+govedina 4 23.99
+svinjetina 3 27.99
+cevapi 20 17.99
