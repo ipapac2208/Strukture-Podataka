@@ -1,0 +1,5 @@
+Beograd 1273651
+Zemun 215400
+Kragujevac 147473
+Subotica 100000
+Leskovac 94758

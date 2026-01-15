@@ -1,0 +1,5 @@
+Ljubljana 272220
+Maribor 97019
+Kranj 37941
+Celje 37872
+Koper 25753

@@ -1,0 +1,4 @@
+﻿SourceB.obj : error LNK2005: main already defined in SourceA.obj
+SourceB.obj : error LNK2005: printCities already defined in SourceA.obj
+SourceB.obj : error LNK2005: printCountries already defined in SourceA.obj
+C:\Users\ipapa\source\repos\z10\x64\Debug\z10.exe : fatal error LNK1169: one or more multiply defined symbols found
