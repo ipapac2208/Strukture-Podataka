@@ -1,0 +1,37 @@
+{
+  "Version": 1,
+  "WorkspaceRootPath": "C:\\Users\\ipapa\\source\\repos\\z11\\",
+  "Documents": [
+    {
+      "AbsoluteMoniker": "D:0:0:{613D2193-18D4-4E51-A3F5-C75082ACA9F2}|z11\\z11.vcxproj|C:\\Users\\ipapa\\source\\repos\\z11\\z11\\Source.c||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
+      "RelativeMoniker": "D:0:0:{613D2193-18D4-4E51-A3F5-C75082ACA9F2}|z11\\z11.vcxproj|solutionrelative:z11\\Source.c||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
+    }
+  ],
+  "DocumentGroupContainers": [
+    {
+      "Orientation": 0,
+      "VerticalTabListWidth": 256,
+      "DocumentGroups": [
+        {
+          "DockedWidth": 200,
+          "SelectedChildIndex": 0,
+          "Children": [
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "Source.c",
+              "DocumentMoniker": "C:\\Users\\ipapa\\source\\repos\\z11\\z11\\Source.c",
+              "RelativeDocumentMoniker": "z11\\Source.c",
+              "ToolTip": "C:\\Users\\ipapa\\source\\repos\\z11\\z11\\Source.c",
+              "RelativeToolTip": "z11\\Source.c",
+              "ViewState": "AQIAAIQAAAAAAAAAAAAAAJ8AAAAAAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000423|",
+              "WhenOpened": "2026-01-15T16:26:07.445Z",
+              "EditorCaption": ""
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
